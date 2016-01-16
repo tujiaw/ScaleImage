@@ -14,9 +14,11 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        dialog.cpp
+        dialog.cpp \
+    imageviewerwidget.cpp
 
-HEADERS  += dialog.h
+HEADERS  += dialog.h \
+    imageviewerwidget.h
 
 FORMS    += dialog.ui
 

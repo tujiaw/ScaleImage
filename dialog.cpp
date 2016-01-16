@@ -10,18 +10,19 @@
 
 Dialog::Dialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::Dialog),
-    m_pixmap(":/test")
+    ui(new Ui::Dialog)
+//    m_pixmap(":/test"),
+//    m_leftButtonDown(false)
 {
     ui->setupUi(this);
-    ui->label->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
-    ui->label->setScaledContents(true);
+//    ui->label->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+//    ui->label->setScaledContents(true);
 
-    ui->label->setPixmap(m_pixmap);
-    this->installEventFilter(this);
-    ui->label->setAlignment(Qt::AlignCenter);
+//    ui->label->setPixmap(m_pixmap);
+//    this->installEventFilter(this);
+//    ui->label->setAlignment(Qt::AlignCenter);
 
-    m_delta = 1.0;
+//    m_delta = 1.0;
 }
 
 Dialog::~Dialog()
@@ -29,59 +30,78 @@ Dialog::~Dialog()
     delete ui;
 }
 
-QPoint s_center;
+//void Dialog::showEvent(QShowEvent *)
+//{
+//    m_size = ui->label->size();
+//}
 
-void Dialog::showEvent(QShowEvent *)
-{
-    m_size = ui->label->size();
-}
+//bool Dialog::eventFilter(QObject *object, QEvent *event)
+//{
+//    if (event->type() == QEvent::Wheel) {
+//        QWheelEvent *we = static_cast<QWheelEvent*>(event);
+//        QPoint mousePos = ui->scrollArea->mapFromGlobal(QCursor::pos());
+//        QPoint labelPos = ui->label->pos();
+//        QSize labelSize = ui->label->size();
+//        if (!ui->label->rect().contains(mousePos)) {
+//            mousePos.setX(m_size.width() / 2);
+//            mousePos.setY(m_size.height() / 2);
+//        }
+//        qreal x = (mousePos.x() - labelPos.x()) * 1.0 / labelSize.width();
+//        qreal y = (mousePos.y() - labelPos.y()) * 1.0 / labelSize.height();
 
-bool Dialog::eventFilter(QObject *object, QEvent *event)
-{
-    if (event->type() == QEvent::Wheel) {
-        QWheelEvent *we = static_cast<QWheelEvent*>(event);
-        QPoint mousePos = ui->scrollArea->mapFromGlobal(QCursor::pos());
-        QPoint labelPos = ui->label->pos();
-        QSize labelSize = ui->label->size();
-        qreal x = (mousePos.x() - labelPos.x()) * 1.0 / labelSize.width();
-        qreal y = (mousePos.y() - labelPos.y()) * 1.0 / labelSize.height();
-        qDebug() << "x:" << x << ",y:" << y;
+//        QPoint p = we->angleDelta();
+//        qreal delta = m_delta + (p.y() > 0 ?  0.2:-0.2);
+//        if (delta <= 0 || delta > 5) {
+//            return false;
+//        }
+//        m_delta = delta;
+//        QSize newSize = m_size * m_delta;
+//        ui->label->resize(newSize);
 
-        QPoint p = we->angleDelta();
-        m_delta += p.y() > 0 ?  0.2:-0.2;
-        qDebug() << "delta:" << m_delta;
-        QSize newSize = m_size * m_delta;
-        ui->label->resize(newSize);
-        qDebug() << "resize:" << newSize;
+//        labelSize = ui->label->size();
+//        QPoint newLabelPos;
+//        newLabelPos.setX(mousePos.x() - x * labelSize.width());
+//        newLabelPos.setY(mousePos.y() - y * labelSize.height());
 
-        labelSize = ui->label->size();
-        QPoint newLabelPos;
-        newLabelPos.setX(mousePos.x() - x * labelSize.width());
-        newLabelPos.setY(mousePos.y() - y * labelSize.height());
+//        ui->label->move(newLabelPos);
+//        if (qFuzzyCompare(m_delta, 1.0)) {
+//            ui->label->move(0, 0);
+//        } else if (p.y() < 0 && m_delta > 1.0){
+//            if (ui->label->x() > 0 || ui->label->x() + ui->label->width() < m_size.width()) {
+//                newLabelPos.setX(0);
+//            }
+//            if (ui->label->y() > 0 || ui->label->y() + ui->label->height() < m_size.height()) {
+//                newLabelPos.setY(0);
+//            }
+//            ui->label->move(newLabelPos);
+//        } else {
+//            ui->label->move(newLabelPos);
+//        }
+//        return true;
+//    }
+//    return false;
+//}
 
-        qDebug() << "new label pos:" << newLabelPos;
+//void Dialog::mousePressEvent(QMouseEvent *event)
+//{
+//    if (event->button() == Qt::LeftButton) {
+//        m_leftButtonDown = true;
+//    }
+//    m_mouseDownPos = event->pos();
+//    m_labelSrcPos = ui->label->pos();
+//    QWidget::mousePressEvent(event);
+//}
 
-        qDebug() << "right:" << ui->label->rect().right();
-        qDebug() << "bottom:" << ui->label->rect().bottom();
+//void Dialog::mouseReleaseEvent(QMouseEvent *event)
+//{
+//    m_leftButtonDown = false;
+//    QWidget::mouseMoveEvent(event);
+//}
 
-        ui->label->move(newLabelPos);
-        if (m_delta == 1.0) {
-            ui->label->move(0, 0);
-            qDebug() << "1111";
-        } else if (p.y() < 0 && m_delta > 1.0){
-            if (ui->label->x() > 0 || ui->label->x() + ui->label->width() < m_size.width()) {
-                newLabelPos.setX(0);
-            } else if (ui->label->y() > 0 || ui->label->y() + ui->label->height() < m_size.height()) {
-                newLabelPos.setY(0);
-            }
-            ui->label->move(newLabelPos);
-        } else {
-            ui->label->move(newLabelPos);
-            qDebug() << "3333";
-        }
-
-        qDebug() << "last, pos:" << ui->label->pos() << ", rect:" << ui->label->rect();
-        return true;
-    }
-    return false;
-}
+//void Dialog::mouseMoveEvent(QMouseEvent *event)
+//{
+//    if (m_leftButtonDown) {
+//        ui->label->move(m_labelSrcPos + event->pos() - m_mouseDownPos);
+//    }
+//    QWidget::mouseMoveEvent(event);
+//}
