@@ -16,6 +16,7 @@ public:
     ~Dialog();
 
 protected:
+    void showEvent(QShowEvent *);
     bool eventFilter(QObject *, QEvent *);
 
 private:

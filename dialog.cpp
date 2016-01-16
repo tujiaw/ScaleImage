@@ -3,8 +3,6 @@
 #include <QDebug>
 #include <QProcess>
 #include <QDir>
-#include <qt_windows.h>
-#include <ShlObj.h>
 #include <QLabel>
 #include <QtWidgets>
 #include <qmath.h>
@@ -23,7 +21,6 @@ Dialog::Dialog(QWidget *parent) :
     this->installEventFilter(this);
     ui->label->setAlignment(Qt::AlignCenter);
 
-    m_size = m_pixmap.size();
     m_delta = 1.0;
 }
 
@@ -33,6 +30,12 @@ Dialog::~Dialog()
 }
 
 QPoint s_center;
+
+void Dialog::showEvent(QShowEvent *)
+{
+    m_size = ui->label->size();
+}
+
 bool Dialog::eventFilter(QObject *object, QEvent *event)
 {
     if (event->type() == QEvent::Wheel) {
@@ -66,18 +69,18 @@ bool Dialog::eventFilter(QObject *object, QEvent *event)
             ui->label->move(0, 0);
             qDebug() << "1111";
         } else if (p.y() < 0 && m_delta > 1.0){
-            QPoint x = ui->label->pos();
             if (ui->label->x() > 0 || ui->label->x() + ui->label->width() < m_size.width()) {
-                x.setX(0);
+                newLabelPos.setX(0);
             } else if (ui->label->y() > 0 || ui->label->y() + ui->label->height() < m_size.height()) {
-                x.setY(0);
+                newLabelPos.setY(0);
             }
-            ui->label->move(x);
+            ui->label->move(newLabelPos);
         } else {
             ui->label->move(newLabelPos);
             qDebug() << "3333";
         }
 
+        qDebug() << "last, pos:" << ui->label->pos() << ", rect:" << ui->label->rect();
         return true;
     }
     return false;
